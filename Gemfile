@@ -5,8 +5,10 @@ gem 'rails', '3.2.11'
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
-gem 'sqlite3'
+gem 'mysql2'
 gem 'devise'
+gem 'web-app-theme'
+gem 'kaminari'
 
 
 # Gems used only for assets and not required
@@ -27,6 +29,7 @@ group :development, :test do
     gem 'rspec-mocks'
     gem 'rspec-expectations'
     gem 'factory_girl'
+    gem 'shoulda'
 end
 
 
