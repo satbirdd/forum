@@ -41,6 +41,8 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @user = User.new(params[:user])
+    @section = Section.new
+    @section.say
 
     respond_to do |format|
       if @user.save

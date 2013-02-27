@@ -34,7 +34,7 @@ describe PostsController do
 
   describe "GET new" do
     it "assigns a new post as @post" do
-      get :new, {}, valid_session
+      get :new, {sectons_id: 2, locale: "da"}, valid_session
       assigns(:post).should be_a_new(Post)
     end
   end

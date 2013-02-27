@@ -14,7 +14,8 @@ class PostsController < ApplicationController
   # GET /posts/1.json
   def show
     @post = Post.find(params[:id])
-
+    
+    @section = @post.section
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @post }
@@ -24,8 +25,8 @@ class PostsController < ApplicationController
   # GET /posts/new
   # GET /posts/new.json
   def new
-    @post = Post.new
-
+    @section = Section.find(params[:section_id])
+    @post = @section.posts.build
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @post }
@@ -40,11 +41,11 @@ class PostsController < ApplicationController
   # POST /posts
   # POST /posts.json
   def create
-    @post = Post.new(params[:post])
-
+    @section = Section.find(params[:section_id])
+    @post = @section.posts.build(params[:post])
     respond_to do |format|
       if @post.save
-        format.html { redirect_to @post, notice: 'Post was successfully created.' }
+        format.html { redirect_to (section_path(@section)), notice: 'Post was successfully created.' }
         format.json { render json: @post, status: :created, location: @post }
       else
         format.html { render action: "new" }

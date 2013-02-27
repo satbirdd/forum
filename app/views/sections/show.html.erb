@@ -1,3 +1,20 @@
 <p id="notice"><%= notice %></p>
 welcome to <%= @section.name %> section!
+<table>
+	<thead>
+	</thead>
+	<tfoot>
+	</tfoot>
+	<tbody>
+	<% @section.posts.each_with_index do |post, index| %>
+		<tr>
+			<td><%= index %></td>
+			<td>
+				<%= link_to post.title, section_post_path(@section, post) %>
+			</td>
+		</tr>
+	<% end %>
+	</tbody>
+</table>
+<%= link_to "add new post", new_section_post_path(@section) %>
 <%= link_to 'Back', sections_path %>
