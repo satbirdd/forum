@@ -2,11 +2,11 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    # @section = Section.find(params[:section_id])
-    @posts = Post.all
+    @section = Section.find(params[:section_id])
+    @posts = @section.posts
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { redirect_to section_posts_url(@section) }
       format.json { render json: @posts }
     end
   end
@@ -14,7 +14,6 @@ class PostsController < ApplicationController
   # GET /posts/1
   # GET /posts/1.json
   def show
-    # @section = Section.find(params[:section_id])
     @post = Post.find(params[:id])
 
     respond_to do |format|
@@ -28,6 +27,7 @@ class PostsController < ApplicationController
   def new
     @section = Section.find(params[:section_id])
     @post = @section.posts.build
+
     respond_to do |format|
       format.html # new.html.erb
       format.json { render json: @post }
@@ -46,7 +46,7 @@ class PostsController < ApplicationController
     @post = @section.posts.build(params[:post])
     respond_to do |format|
       if @post.save
-        format.html { redirect_to (section_post_path(@section, @post)), notice: 'Post was successfully created.' }
+        format.html { redirect_to ( @post), notice: 'Post was successfully created.' }
         format.json { render json: @post, status: :created, location: @post }
       else
         format.html { render action: "new" }
@@ -58,12 +58,11 @@ class PostsController < ApplicationController
   # PUT /posts/1
   # PUT /posts/1.json
   def update
-    @section = Section.find(params[:section_id])
     @post = Post.find(params[:id])
 
     respond_to do |format|
       if @post.update_attributes(params[:post])
-        format.html { redirect_to [@section, @post], notice: 'Post was successfully updated.' }
+        format.html { redirect_to @post, notice: 'Post was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }

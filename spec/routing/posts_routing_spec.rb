@@ -2,13 +2,14 @@ require "spec_helper"
 
 describe PostsController do
   describe "routing" do
+    let(:section) { Section.where(name: 'tt_section_name').first_or_create}
 
     it "routes to #index" do
-      get("/posts").should route_to("posts#index")
+      get("/sections/#{ section.id }/posts").should route_to( controller: 'posts', action: 'index', section_id: section.id.to_s)
     end
 
     it "routes to #new" do
-      get("/posts/new").should route_to("posts#new")
+      get("/sections/#{ section.id }/posts/new").should route_to(controller: 'posts', action: 'new', section_id: section.id.to_s)
     end
 
     it "routes to #show" do
@@ -20,7 +21,7 @@ describe PostsController do
     end
 
     it "routes to #create" do
-      post("/posts").should route_to("posts#create")
+      post("/sections/#{ section.id }/posts").should route_to(controller: 'posts', action: 'create', section_id: section.id.to_s)
     end
 
     it "routes to #update" do

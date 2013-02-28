@@ -2,10 +2,11 @@ class CommentsController < ApplicationController
   # GET /comments
   # GET /comments.json
   def index
-    @comments = Comment.all
+    @post = Post.find(params[:post_id])
+    @comments = @post.comments
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { redirect_to post_comments_url(@post) }
       format.json { render json: @comments }
     end
   end
@@ -24,8 +25,8 @@ class CommentsController < ApplicationController
   # GET /comments/new
   # GET /comments/new.json
   def new
-    # @post = Post.find(params[:post_id])
-    @comment = Comment.new
+    @post = Post.find(params[:post_id])
+    @comment = @post.comments.build
 
     respond_to do |format|
       format.html # new.html.erb
@@ -46,7 +47,7 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.save
-        format.html { redirect_to [@comment.post.section, @comment.post, @comment], notice: 'Comment was successfully created.' }
+        format.html { redirect_to @comment, notice: 'Comment was successfully created.' }
         format.json { render json: @comment, status: :created, location: @comment }
       else
         format.html { render action: "new" }
@@ -62,7 +63,7 @@ class CommentsController < ApplicationController
 
     respond_to do |format|
       if @comment.update_attributes(params[:comment])
-        format.html { redirect_to [@comment.post.section, @comment.post, @comment], notice: 'Comment was successfully updated.' }
+        format.html { redirect_to @comment, notice: 'Comment was successfully updated.' }
         format.json { head :no_content }
       else
         format.html { render action: "edit" }
@@ -79,7 +80,7 @@ class CommentsController < ApplicationController
     @comment.destroy
 
     respond_to do |format|
-      format.html { redirect_to section_post_comments_url(@post.section, @post) }
+      format.html { redirect_to post_comments_url(@post) }
       format.json { head :no_content }
     end
   end

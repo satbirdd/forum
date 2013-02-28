@@ -10,7 +10,7 @@ welcome to <%= @section.name %> section!
 		<tr>
 			<td><%= index %></td>
 			<td>
-				<%= link_to post.title, section_post_path(@section, post) %>
+				<%= link_to post.title, post_path(post) %>
 			</td>
 		</tr>
 	<% end %>

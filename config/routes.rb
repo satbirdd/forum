@@ -1,5 +1,5 @@
 Forum::Application.routes.draw do
-  resources :sections do
+  resources :sections, shallow: true do
     resources :posts do
       resources :comments
     end
