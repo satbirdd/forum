@@ -5,7 +5,7 @@ development:
   database: forum_development
   pool: 5
   username: root
-  password: porcorosso
+  password: 
   host: localhost
 #  socket: tmp/mysql.sock
 
@@ -19,7 +19,7 @@ test:
   database: forum_test
   pool: 5
   username: root
-  password: porcorosso
+  password: 
   host: localhost
   #socket: /tmp/mysql.sock
 
@@ -30,6 +30,6 @@ production:
   database: forum_production
   pool: 5
   username: root
-  password: porcorosso
+  password: 
   host: localhost
  # socket: /tmp/mysql.sock
