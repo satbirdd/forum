@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe "comments/index" do
   before(:each) do
+    @post = Post.where(title: 'tt_post_title').first_or_create
     assign(:comments, [
       stub_model(Comment),
       stub_model(Comment)

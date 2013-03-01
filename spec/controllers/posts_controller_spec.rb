@@ -20,7 +20,7 @@ describe PostsController do
 
   describe "GET index" do
     it "assigns all posts as @posts" do
-      post = Post.create! valid_attributes
+      post = section.posts.create valid_attributes
       get :index, { section_id: section.id }, valid_session
       assigns(:posts).should eq([post])
     end

@@ -2,13 +2,14 @@ require "spec_helper"
 
 describe CommentsController do
   describe "routing" do
+    let(:the_post) { Post.where(title: 'tt_post_title').first_or_create }
 
     it "routes to #index" do
-      get("/comments").should route_to("comments#index")
+      get("posts/#{ the_post.id }/comments").should route_to("comments#index", post_id: the_post.id.to_s)
     end
 
     it "routes to #new" do
-      get("/comments/new").should route_to("comments#new")
+      get("posts/#{ the_post.id }/comments/new").should route_to("comments#new", post_id: the_post.id.to_s)
     end
 
     it "routes to #show" do
@@ -20,7 +21,7 @@ describe CommentsController do
     end
 
     it "routes to #create" do
-      post("/comments").should route_to("comments#create")
+      post("posts/#{ the_post.id }/comments").should route_to("comments#create", post_id: the_post.id.to_s)
     end
 
     it "routes to #update" do

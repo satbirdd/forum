@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe "comments/show" do
   before(:each) do
-    @comment = assign(:comment, stub_model(Comment))
+     the_post = Post.where(title: 'tt_post_title').first_or_create
+    @comment = assign(:comment, the_post.comments.where(content: 'tt_comment_content').first_or_create)
   end
 
   it "renders attributes in <p>" do
