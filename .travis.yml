@@ -9,10 +9,14 @@ rvm:
 # script:
 # 	- RAILS_ENV=test bundle exec rake ci --trace db:create
 # 	- RAILS_ENV=test bundle exec rake ci --trace db:migrate
+env:
+  - DB=mysql
+script:
+    - RAILS_ENV=test bundle exec rake db:migrate --trace
+    - bundle exec rake db:test:prepare
+    - bundle exec rake
 before_script:
-	- RAILS_ENV=test bundle exec rake ci --trace db:create
- 	- RAILS_ENV=test bundle exec rake ci --trace db:migrate
-	# - mysql -e 'create database forum_test;'
+    - mysql -e 'create database forum_test'
 notifications: 
-	email: 
-		- satbirdd@gmail.com
+    email: 
+        - satbirdd@gmail.com
