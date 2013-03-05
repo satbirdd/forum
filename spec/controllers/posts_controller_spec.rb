@@ -75,7 +75,7 @@ describe PostsController do
 
   describe "POST create" do
     describe "with valid params" do
-      describe "authenticated" do
+      context "authenticated" do
         before(:each) { sign_in user }
         it "creates a new Post" do
           expect {
@@ -96,27 +96,41 @@ describe PostsController do
         end
       end
 
-      describe "unauthenticated" do
+      context "unauthenticated" do
         it "redirect to session#new" do
           sign_out user
+          post :create, {:post => valid_attributes,  section_id: section.id }#, valid_session
+          post = Post.last
           response.should redirect_to new_user_session_path
         end
       end
     end
 
     describe "with invalid params" do
-      it "assigns a newly created but unsaved post as @post" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Post.any_instance.stub(:save).and_return(false)
-        post :create, {:post => {  },  section_id: section.id }#, valid_session
-        assigns(:post).should be_a_new(Post)
+      context "authenticated" do
+        before(:each) { sign_in user }
+        it "assigns a newly created but unsaved post as @post" do
+          # Trigger the behavior that occurs when invalid params are submitted
+          Post.any_instance.stub(:save).and_return(false)
+          post :create, {:post => {  },  section_id: section.id }#, valid_session
+          assigns(:post).should be_a_new(Post)
+        end
+
+        it "re-renders the 'new' template" do
+          # Trigger the behavior that occurs when invalid params are submitted
+          Post.any_instance.stub(:save).and_return(false)
+          post :create, {:post => {  },  section_id: section.id }#, valid_session
+          response.should render_template("new")
+        end
       end
 
-      it "re-renders the 'new' template" do
-        # Trigger the behavior that occurs when invalid params are submitted
-        Post.any_instance.stub(:save).and_return(false)
-        post :create, {:post => {  },  section_id: section.id }#, valid_session
-        response.should render_template("new")
+      context "unauthenticated" do
+        it "redirect to session#new" do
+          sign_out user
+          Post.any_instance.stub(:save).and_return(false)
+          post :create, {:post => {  },  section_id: section.id }
+          response.should redirect_to new_user_session_path
+        end
       end
     end
   end
@@ -166,18 +180,28 @@ describe PostsController do
   end
 
   describe "DELETE destroy" do
-    it "destroys the requested post" do
-      post = Post.create! valid_attributes
-      expect {
-        delete :destroy, { :id => post.to_param, section_id: section.id }#, valid_session
-      }.to change(Post, :count).by(-1)
+    context "authenticated" do
+      before(:each) { sign_in user }
+      it "destroys the requested post" do
+        post = Post.create! valid_attributes
+        expect {
+          delete :destroy, { :id => post.to_param, section_id: section.id }#, valid_session
+        }.to change(Post, :count).by(-1)
+      end
+
+      it "redirects to the posts list" do
+        post = Post.create! valid_attributes
+        delete :destroy, {:id => post.to_param, section_id: section.id }#, valid_session
+        response.should redirect_to(section_posts_url(section))
+      end
     end
 
-    it "redirects to the posts list" do
-      post = Post.create! valid_attributes
-      delete :destroy, {:id => post.to_param, section_id: section.id }#, valid_session
-      response.should redirect_to(section_posts_url(section))
-    end
+    # context "unauthenticated" do
+    #   it "redirect to session#new" do
+    #     sign_out user
+    #     response.should redirect_to new_user_session_path
+    #   end
+    # end
   end
 
 end

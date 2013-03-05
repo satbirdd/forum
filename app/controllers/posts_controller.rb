@@ -1,6 +1,6 @@
 class PostsController < ApplicationController
 
-  before_filter :authenticate_user!, only: ['new', 'edit']
+  before_filter :authenticate_user!, only: [:new, :edit, :create]
   # GET /posts
   # GET /posts.json
   def index
