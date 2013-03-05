@@ -75,22 +75,32 @@ describe PostsController do
 
   describe "POST create" do
     describe "with valid params" do
-      it "creates a new Post" do
-        expect {
+      describe "authenticated" do
+        before(:each) { sign_in user }
+        it "creates a new Post" do
+          expect {
+            post :create, {:post => valid_attributes,  section_id: section.id }#, valid_session
+          }.to change(Post, :count).by(1)
+        end
+
+        it "assigns a newly created post as @post" do
           post :create, {:post => valid_attributes,  section_id: section.id }#, valid_session
-        }.to change(Post, :count).by(1)
+          assigns(:post).should be_a(Post)
+          assigns(:post).should be_persisted
+        end
+
+        it "redirects to the created post" do
+          post :create, {:post => valid_attributes,  section_id: section.id }#, valid_session
+          post = Post.last
+          response.should redirect_to(post)
+        end
       end
 
-      it "assigns a newly created post as @post" do
-        post :create, {:post => valid_attributes,  section_id: section.id }#, valid_session
-        assigns(:post).should be_a(Post)
-        assigns(:post).should be_persisted
-      end
-
-      it "redirects to the created post" do
-        post :create, {:post => valid_attributes,  section_id: section.id }#, valid_session
-        post = Post.last
-        response.should redirect_to(post)
+      describe "unauthenticated" do
+        it "redirect to session#new" do
+          sign_out user
+          response.should redirect_to new_user_session_path
+        end
       end
     end
 
