@@ -1,4 +1,5 @@
 class SectionsController < ApplicationController
+  before_filter :authenticate_user!, except: [:index, :show]
   # GET /sections
   # GET /sections.json
   def index
