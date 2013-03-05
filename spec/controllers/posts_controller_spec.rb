@@ -196,12 +196,14 @@ describe PostsController do
       end
     end
 
-    # context "unauthenticated" do
-    #   it "redirect to session#new" do
-    #     sign_out user
-    #     response.should redirect_to new_user_session_path
-    #   end
-    # end
+    context "unauthenticated" do
+      it "redirect to session#new" do
+        post = Post.create! valid_attributes
+        delete :destroy, {:id => post.to_param, section_id: section.id }#, valid_session
+        sign_out user
+        response.should redirect_to new_user_session_path
+      end
+    end
   end
 
 end
