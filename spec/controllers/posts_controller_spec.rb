@@ -137,44 +137,72 @@ describe PostsController do
 
   describe "PUT update" do
     describe "with valid params" do
-      it "updates the requested post" do
-        post = Post.create! valid_attributes
-        # Assuming there are no other posts in the database, this
-        # specifies that the Post created on the previous line
-        # receives the :update_attributes message with whatever params are
-        # submitted in the request.
-        Post.any_instance.should_receive(:update_attributes).with({ "these" => "params" })
-        put :update, {:id => post.to_param, :post => { "these" => "params" } }#, valid_session
+      context "authenticated" do
+        before(:each) { sign_in user }
+
+        it "updates the requested post" do
+          post = Post.create! valid_attributes
+          # Assuming there are no other posts in the database, this
+          # specifies that the Post created on the previous line
+          # receives the :update_attributes message with whatever params are
+          # submitted in the request.
+          Post.any_instance.should_receive(:update_attributes).with({ "these" => "params" })
+          put :update, {:id => post.to_param, :post => { "these" => "params" } }#, valid_session
+        end
+
+        it "assigns the requested post as @post" do
+          post = Post.create! valid_attributes
+          put :update, {:id => post.to_param, :post => valid_attributes }#, valid_session
+          assigns(:post).should eq(post)
+        end
+
+        it "redirects to the post" do
+          post = Post.create! valid_attributes
+          put :update, {:id => post.to_param, :post => valid_attributes }#, valid_session
+          response.should redirect_to(post)
+        end
       end
 
-      it "assigns the requested post as @post" do
-        post = Post.create! valid_attributes
-        put :update, {:id => post.to_param, :post => valid_attributes }#, valid_session
-        assigns(:post).should eq(post)
-      end
-
-      it "redirects to the post" do
-        post = Post.create! valid_attributes
-        put :update, {:id => post.to_param, :post => valid_attributes }#, valid_session
-        response.should redirect_to(post)
+      context "unauthenticated" do
+        it "redirect to session#new" do
+          sign_out user
+          post = Post.create! valid_attributes
+          put :update, { id: post.to_param, post: valid_attributes }
+          response.should redirect_to new_user_session_path
+        end
       end
     end
 
     describe "with invalid params" do
-      it "assigns the post as @post" do
-        post = Post.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Post.any_instance.stub(:save).and_return(false)
-        put :update, {:id => post.to_param, :post => {  } }#, valid_session
-        assigns(:post).should eq(post)
+      context "authenticated" do
+        before(:each) { sign_in user }
+
+        it "assigns the post as @post" do
+          post = Post.create! valid_attributes
+          # Trigger the behavior that occurs when invalid params are submitted
+          Post.any_instance.stub(:save).and_return(false)
+          put :update, {:id => post.to_param, :post => {  } }#, valid_session
+          assigns(:post).should eq(post)
+        end
+
+        it "re-renders the 'edit' template" do
+          post = Post.create! valid_attributes
+          # Trigger the behavior that occurs when invalid params are submitted
+          Post.any_instance.stub(:save).and_return(false)
+          put :update, {:id => post.to_param, :post => {  } }#, valid_session
+          response.should render_template("edit")
+        end
       end
 
-      it "re-renders the 'edit' template" do
-        post = Post.create! valid_attributes
-        # Trigger the behavior that occurs when invalid params are submitted
-        Post.any_instance.stub(:save).and_return(false)
-        put :update, {:id => post.to_param, :post => {  } }#, valid_session
-        response.should render_template("edit")
+      context "unauthenticated" do
+        it "redirect to session#new" do
+          sign_out user
+          post = Post.create! valid_attributes
+          # Trigger the behavior that occurs when invalid params are submitted
+          Post.any_instance.stub(:save).and_return(false)
+          put :update, {:id => post.to_param, :post => {  } }
+          response.should redirect_to new_user_session_path
+        end
       end
     end
   end
