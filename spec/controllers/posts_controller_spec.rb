@@ -54,10 +54,22 @@ describe PostsController do
   end
 
   describe "GET edit" do
-    it "assigns the requested post as @post" do
-      post = Post.create! valid_attributes
-      get :edit, {:id => post.to_param,  section_id: section.id }#, valid_session
-      assigns(:post).should eq(post)
+    describe "authenticated" do
+      it "assigns the requested post as @post" do
+        sign_in user
+        post = Post.create! valid_attributes
+        get :edit, {:id => post.to_param,  section_id: section.id }#, valid_session
+        assigns(:post).should eq(post)
+      end
+    end
+
+    describe "unanthenticated" do
+      it "redirect to the sessions#new page" do
+        sign_out user
+        post = Post.create! valid_attributes
+        get :edit, {id: post.to_param, section_id: section.id}
+        response.should redirect_to new_user_session_path
+      end
     end
   end
 
