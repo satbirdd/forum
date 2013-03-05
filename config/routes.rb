@@ -1,4 +1,6 @@
 Forum::Application.routes.draw do
+  devise_for :users
+
   resources :sections, shallow: true do
     resources :posts do
       resources :comments
@@ -7,5 +9,5 @@ Forum::Application.routes.draw do
 
   resources :users
 
-  root to: ' sections#index'
+  root :to => 'sections#index'
 end
