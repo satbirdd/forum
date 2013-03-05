@@ -64,10 +64,10 @@ describe CommentsController do
         assigns(:comment).should be_persisted
       end
 
-      it "redirects to the created comment" do
+      it "redirects to the created comment's post" do
         post :create, {:comment => valid_attributes, post_id: the_post.id}, valid_session
         comment = Comment.last
-        response.should redirect_to(comment)
+        response.should redirect_to(the_post)
       end
     end
 

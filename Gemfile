@@ -7,6 +7,8 @@ gem 'rails', '3.2.11'
 
 gem 'mysql2'
 gem 'devise'
+gem 'formtastic'
+gem 'simple_form'
 gem 'web-app-theme'
 gem 'kaminari'
 
