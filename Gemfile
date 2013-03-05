@@ -28,7 +28,7 @@ group :development, :test do
     gem 'rspec-rails'
     gem 'rspec-mocks'
     gem 'rspec-expectations'
-    gem 'factory_girl'
+    gem 'factory_girl_rails'
     gem 'shoulda'
 end
 
