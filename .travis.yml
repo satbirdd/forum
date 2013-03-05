@@ -14,6 +14,6 @@ script:
     - bundle exec rake
 before_script:
     - mysql -e 'create database forum_test'
-notifications: 
-    email: 
+notifications:
+    email:
         - satbirdd@gmail.com
